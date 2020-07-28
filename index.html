@@ -1,0 +1,788 @@
+<!doctype html>
+<html>
+<head>
+    <style>        
+	    .tooltip {
+			border: 1px black solid;	
+			border-radius: 15px;
+			padding: 10px;
+			font-family: "Arial", Helvectica, san-serif;  
+			font-size: 14px;			
+		}
+		
+		.cars{
+			border: 1px #5c5d5d solid;
+			font-family: "Arial", Helvectica, san-serif;  
+		}
+		
+		.body {
+		font-family: Helvectica, san-serif;  
+		}
+		.svg{
+		font-family: "Arial", Helvectica, san-serif;  
+		}
+		#HighwayMPH {
+		font-size: 16px;			
+		}
+		#CityMPH {
+		font-size: 16px;			
+		}
+		#FuelType {
+		font-size: 16px;			
+		}
+		#Reset {
+		font-size: 16px;			
+		}
+		svg{ background: #fff; }
+    </style>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+<body><center><font style="font-size: 16px;font-family: Arial, Helvectica, san-serif;">Click To View By:</font>&nbsp;&nbsp;
+<button id="HighwayMPH">Highway MPG</button>
+<button id="CityMPH">City MPG</button>
+<button id="FuelType">Fuel Type</button>
+<button id="Reset">Overview</button>
+<div id="chart"></div>
+</center>
+<script>
+
+//    d3.csv("https://flunky.github.io/cars2017.csv", function(error, data) {
+//        if (error) {
+//            throw error;
+//        }
+
+
+d3.csv("https://flunky.github.io/cars2017.csv")
+  .then(function(data) {
+      // data is now whole data set
+      // draw chart in here!
+ 
+ //Print Car Data
+ console.log(data);
+ 
+var width = 1400, height = 800;
+
+
+//Tooltip variable
+var tooltip = d3.select("body")
+    .append("div")
+    .attr("class", "tooltip")	
+    .style("position", "absolute")
+    .style("z-index", "10")
+    .style("visibility", "hidden")
+    .style("background", "#FFF")
+    .text("a simple tooltip")
+	
+	
+	
+ 
+var SelectedSVG = d3.select("#chart")
+     .append("svg")
+	 .attr("height",height)
+	 .attr("width",width)
+	 .attr("title", "Hello")
+	 .append("g")
+	 .attr("transform","translate(0,0)")
+	 
+    SelectedSVG.append("text")
+       .attr("transform", "translate(100,0)")
+       .attr("x", 50)
+       .attr("y", 50)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "20px")	   
+       .text("These are all of the cars produced in 2017")
+	  
+	  
+	  
+//Set up legend
+     SelectedSVG.append("circle")
+		.attr("transform", "translate(1228,20)")
+		.attr("cx", 70)
+		.attr("cy", 50)
+		.attr("r", 25)
+		.attr("stroke","black")
+		.attr("stroke-width",1)
+		.attr("fill", "#9df2e0")   
+     SelectedSVG.append("circle")
+		.attr("transform", "translate(1228,20)")
+		.attr("cx", 71)
+		.attr("cy", 110)
+		.attr("r", 24.5)
+		.attr("stroke","black")
+		.attr("stroke-width",1)
+		.attr("fill", "#fabf8e")	   
+	  SelectedSVG.append("circle")
+		.attr("transform", "translate(1228,20)")
+		.attr("cx", 72)
+		.attr("cy", 170)
+		.attr("r", 22.5)
+		.attr("stroke","black")
+		.attr("stroke-width",1)
+		.attr("fill", "#dec9c8")
+	  SelectedSVG.append("circle")
+		.attr("transform", "translate(1228,20)")
+		.attr("cx", 72.5)
+		.attr("cy", 230)
+		.attr("r", 20)
+		.attr("stroke","black")
+		.attr("stroke-width",1)
+		.attr("fill", "#f1f5a2")
+	  SelectedSVG.append("circle")
+		.attr("transform", "translate(1228,20)")
+		.attr("cx", 73)
+		.attr("cy", 290)
+		.attr("r", 18.5)
+		.attr("stroke","black")
+		.attr("stroke-width",1)
+		.attr("fill", "#f25a6e")
+	  SelectedSVG.append("circle")
+		.attr("transform", "translate(1228,20)")
+		.attr("cx", 73)
+		.attr("cy", 350)
+		.attr("r", 16.5)
+		.attr("stroke","black")
+		.attr("stroke-width",1)
+		.attr("fill", "#edb9ea")
+	  SelectedSVG.append("circle")
+		.attr("transform", "translate(1228,20)")
+		.attr("cx", 73)
+		.attr("cy", 410)
+		.attr("r", 14)
+		.attr("stroke","black")
+		.attr("stroke-width",1)
+		.attr("fill", "#defaf9")
+	  SelectedSVG.append("circle")
+		.attr("transform", "translate(1228,20)")
+		.attr("cx", 73)
+		.attr("cy", 470)
+		.attr("r", 10)
+		.attr("stroke","black")
+		.attr("stroke-width",1)
+		.attr("fill", "#e5edda")
+		 SelectedSVG.append("text")
+       .attr("transform", "translate(1230,0)")
+       .attr("x", 35)
+       .attr("y", 20)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "20px")	   
+       .text("Legend")
+	  SelectedSVG.append("text")
+       .attr("transform", "translate(1250,20)")
+       .attr("x", 80)
+	   .attr("y", 50)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "12px")	   
+       .text("12 Cylinder")
+	  SelectedSVG.append("text")
+       .attr("transform", "translate(1250,20)")
+       .attr("x", 80)
+	   .attr("y", 115)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "12px")	   
+       .text("10 Cylinder")
+	  SelectedSVG.append("text")
+       .attr("transform", "translate(1250,20)")
+       .attr("x", 80)
+	   .attr("y", 170)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "12px")	   
+       .text("8 Cylinder")
+	  SelectedSVG.append("text")
+       .attr("transform", "translate(1250,20)")
+       .attr("x", 80)
+	   .attr("y", 235)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "12px")	   
+       .text("6 Cylinder")
+	  SelectedSVG.append("text")
+       .attr("transform", "translate(1250,20)")
+       .attr("x", 80)
+	   .attr("y", 290)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "12px")	   
+       .text("4 Cylinder")
+	  SelectedSVG.append("text")
+       .attr("transform", "translate(1250,20)")
+       .attr("x", 80)
+	   .attr("y", 355)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "12px")	   
+       .text("3 Cylinder")
+	SelectedSVG.append("text")
+       .attr("transform", "translate(1250,20)")
+       .attr("x", 80)
+	   .attr("y", 415)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "12px")	   
+       .text("2 Cylinder")
+	 SelectedSVG.append("text")
+       .attr("transform", "translate(1250,20)")
+       .attr("x", 80)
+		.attr("y", 475)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "12px")	   
+       .text("Electric")			
+		
+  
+  	 SelectedSVG.append("text")
+       .attr("transform", "translate(940,20)")
+       .attr("x", 0)
+		.attr("y", 665)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "14px")	   
+       .text("As expected, Electric Vehicles get above average Highway and City MPG")
+	   
+	   SelectedSVG.append("text")
+       .attr("transform", "translate(940,20)")
+       .attr("x", 0)
+		.attr("y", 680)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "14px")	   
+       .text("Click on the buttons at the top to see how the other fuel types and Cylinders Stack up.")
+  
+
+	   
+	   
+	 
+var radiusScale = d3.scaleSqrt().domain([0,12]).range([10,25])
+
+var forceX = d3.forceX(function(d) {
+       if(d.AverageHighwayMPG > 27){
+	       return 200
+        }else{
+		   return 950
+		}
+		 }).strength(0.06)
+		 
+		 
+var forceXCity = d3.forceX(function(d) {
+       if(d.AverageCityMPG > 20){
+	       return 200
+        }else{
+		   return 950
+		}
+		 }).strength(0.06)
+		 
+		 
+		 
+var forceXFuel = d3.forceX(function(d) {
+       if(d.Fuel=== "Gasoline"){return 900}
+	   if(d.Fuel=== "Diesel"){return 100}	 
+       if(d.Fuel=== "Electricity"){return 400}	   
+		 }
+		 ).strength(0.06)
+
+
+var forceCollide = d3.forceCollide(function(d) {
+          return radiusScale(d.EngineCylinders)}) //+4
+	 
+var simulation = d3.forceSimulation()
+    //.force("x", forceX)
+	.force("x", d3.forceX(width/2).strength(0.05))
+	.force("y", d3.forceY(height/2).strength(0.05))
+	.force("collide", forceCollide)
+	
+
+
+
+			  
+
+
+	
+var circles = SelectedSVG.selectAll(".cars")
+        .data(data)
+		.enter().append("circle")
+		.attr("class", "cars")		
+		.attr("r", function(d){return radiusScale(d.EngineCylinders)})
+		.attr("fill", function(d){ //put switch		         
+		        switch(d.EngineCylinders) {
+				  case "0":
+					return "#e5edda";					
+				  case "2":
+					return "#defaf9";					
+				  case "3":
+					return "#edb9ea";					
+				  case "4":
+					return "#f25a6e";					
+				  case "6":
+					return "#f1f5a2";					
+				  case "8":
+					return "#dec9c8";					
+				  case "10":
+					return "#fabf8e";					
+				  case "12":
+					return "#9df2e0";					  
+				}				
+				}
+		      )
+	    .attr("stroke-width",1)
+		.attr("stroke","#5c5d5d")			
+		.attr("text", function(d){ return d.EngineCylinders;})
+		.on("mouseover", function(d){
+		         tooltip.html('<b>Make:</b> '+ d .Make + '</br></br><b>Hwy MPG:</b> '+ d.AverageHighwayMPG + '</br><b>City MPG:</b> ' + d.AverageCityMPG + '</br><b>Fuel:</b> ' + d.Fuel + '</br><b>Cylinders:</b> ' + d.EngineCylinders ); return tooltip.style("visibility", "visible");
+				 circle.style("stroke", "#000");
+				 
+				 })
+        .on("mousemove", function(){return tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");})
+        .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
+
+
+
+d3.select("#HighwayMPH").on('click', function() {
+      simulation
+	  .force("x",forceX)
+	  .alphaTarget(0.29)
+	  .restart()
+	  SelectedSVG.selectAll("text").remove()
+	  SelectedSVG.append("text")
+       .attr("transform", "translate(0,0)")
+       .attr("x", 50)
+       .attr("y", 700)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "24px")
+       .text("Highway MPG")
+	   SelectedSVG.append("text")
+       .attr("transform", "translate(0,0)")
+       .attr("x", 25)
+       .attr("y", 50)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "24px")
+       .text("These Have Above Median Highway MPG")
+	   SelectedSVG.append("text")
+       .attr("transform", "translate(0,0)")
+       .attr("x", 700)
+       .attr("y", 50)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "24px")
+       .text("These Have Below Median Highway MPG")
+	   		 SelectedSVG.append("text")
+       .attr("transform", "translate(1230,0)")
+       .attr("x", 35)
+       .attr("y", 20)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "20px")	   
+       .text("Legend")
+	  SelectedSVG.append("text")
+       .attr("transform", "translate(1250,20)")
+       .attr("x", 80)
+	   .attr("y", 50)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "12px")	   
+       .text("12 Cylinder")
+	  SelectedSVG.append("text")
+       .attr("transform", "translate(1250,20)")
+       .attr("x", 80)
+	   .attr("y", 115)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "12px")	   
+       .text("10 Cylinder")
+	  SelectedSVG.append("text")
+       .attr("transform", "translate(1250,20)")
+       .attr("x", 80)
+	   .attr("y", 170)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "12px")	   
+       .text("8 Cylinder")
+	  SelectedSVG.append("text")
+       .attr("transform", "translate(1250,20)")
+       .attr("x", 80)
+	   .attr("y", 235)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "12px")	   
+       .text("6 Cylinder")
+	  SelectedSVG.append("text")
+       .attr("transform", "translate(1250,20)")
+       .attr("x", 80)
+	   .attr("y", 290)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "12px")	   
+       .text("4 Cylinder")
+	  SelectedSVG.append("text")
+       .attr("transform", "translate(1250,20)")
+       .attr("x", 80)
+	   .attr("y", 355)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "12px")	   
+       .text("3 Cylinder")
+	SelectedSVG.append("text")
+       .attr("transform", "translate(1250,20)")
+       .attr("x", 80)
+	   .attr("y", 415)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "12px")	   
+       .text("2 Cylinder")
+	 SelectedSVG.append("text")
+       .attr("transform", "translate(1250,20)")
+       .attr("x", 80)
+		.attr("y", 475)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "12px")	   
+       .text("Electric")
+	    	 SelectedSVG.append("text")
+      .attr("transform", "translate(940,20)")
+       .attr("x", 0)
+		.attr("y", 665)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "14px")	   
+       .text("As expected, Electric Vehicles get above average Highway and City MPG")
+	   
+	   SelectedSVG.append("text")
+       .attr("transform", "translate(940,20)")
+       .attr("x", 0)
+		.attr("y", 680)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "14px")	   
+       .text("Click on the buttons at the top to see how the other fuel types and Cylinders Stack up.")
+	  })
+	  
+	  
+	  
+	  
+	   
+	  
+	  
+	  
+	  
+d3.select("#CityMPH").on('click', function() {
+      simulation
+	  .force("x",forceXCity)
+	  .alphaTarget(0.29)
+	  .restart()
+	    SelectedSVG.selectAll("text").remove()
+	    SelectedSVG.append("text")
+       .attr("transform", "translate(0,0)")
+       .attr("x", 50)
+       .attr("y", 700)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "24px")
+       .text("City MPG")
+	   SelectedSVG.append("text")
+       .attr("transform", "translate(0,0)")
+       .attr("x", 50)
+       .attr("y", 50)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "24px")	   
+       .text("These Have Above Median City MPG")
+	   SelectedSVG.append("text")
+       .attr("transform", "translate(0,0)")
+       .attr("x", 750)
+       .attr("y", 50)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "24px")	   
+       .text("These Have Below Median City MPG")
+	   		 SelectedSVG.append("text")
+       .attr("transform", "translate(1230,0)")
+       .attr("x", 35)
+       .attr("y", 20)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "20px")	   
+       .text("Legend")
+	  SelectedSVG.append("text")
+       .attr("transform", "translate(1250,20)")
+       .attr("x", 80)
+	   .attr("y", 50)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "12px")	   
+       .text("12 Cylinder")
+	  SelectedSVG.append("text")
+       .attr("transform", "translate(1250,20)")
+       .attr("x", 80)
+	   .attr("y", 115)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "12px")	   
+       .text("10 Cylinder")
+	  SelectedSVG.append("text")
+       .attr("transform", "translate(1250,20)")
+       .attr("x", 80)
+	   .attr("y", 170)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "12px")	   
+       .text("8 Cylinder")
+	  SelectedSVG.append("text")
+       .attr("transform", "translate(1250,20)")
+       .attr("x", 80)
+	   .attr("y", 235)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "12px")	   
+       .text("6 Cylinder")
+	  SelectedSVG.append("text")
+       .attr("transform", "translate(1250,20)")
+       .attr("x", 80)
+	   .attr("y", 290)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "12px")	   
+       .text("4 Cylinder")
+	  SelectedSVG.append("text")
+       .attr("transform", "translate(1250,20)")
+       .attr("x", 80)
+	   .attr("y", 355)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "12px")	   
+       .text("3 Cylinder")
+	SelectedSVG.append("text")
+       .attr("transform", "translate(1250,20)")
+       .attr("x", 80)
+	   .attr("y", 415)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "12px")	   
+       .text("2 Cylinder")
+	 SelectedSVG.append("text")
+       .attr("transform", "translate(1250,20)")
+       .attr("x", 80)
+		.attr("y", 475)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "12px")	   
+       .text("Electric")
+	    	 SelectedSVG.append("text")
+       .attr("transform", "translate(940,20)")
+       .attr("x", 0)
+		.attr("y", 665)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "14px")	   
+       .text("As expected, Electric Vehicles get above average Highway and City MPG")
+	   
+	   SelectedSVG.append("text")
+       .attr("transform", "translate(940,20)")
+       .attr("x", 0)
+		.attr("y", 680)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "14px")	   
+       .text("Click on the buttons at the top to see how the other fuel types and Cylinders Stack up.")
+	  })
+	  
+d3.select("#FuelType").on('click', function() {
+      simulation
+	  .force("x",forceXFuel)      	  
+	  .alphaTarget(0.26)
+	  .restart()	 	  
+	   SelectedSVG.selectAll("text").remove()
+	  SelectedSVG.append("text")
+       .attr("transform", "translate(0,0)")
+       .attr("x", 50)
+       .attr("y", 700)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "24px")
+       .text("Fuel Type")
+	   SelectedSVG.append("text")
+       .attr("transform", "translate(0,0)")
+       .attr("x", 50)
+       .attr("y", 50)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "24px")
+       .text("Diesel")
+	   SelectedSVG.append("text")
+       .attr("transform", "translate(0,0)")
+       .attr("x", 350)
+       .attr("y", 50)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "24px")
+       .text("Electricity")
+	   SelectedSVG.append("text")
+       .attr("transform", "translate(0,0)")
+       .attr("x", 850)
+       .attr("y", 50)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "24px")
+       .text("Gasoline")
+	   		 SelectedSVG.append("text")
+       .attr("transform", "translate(1230,0)")
+       .attr("x", 35)
+       .attr("y", 20)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "20px")	   
+       .text("Legend")
+	  SelectedSVG.append("text")
+       .attr("transform", "translate(1250,20)")
+       .attr("x", 80)
+	   .attr("y", 50)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "12px")	   
+       .text("12 Cylinder")
+	  SelectedSVG.append("text")
+       .attr("transform", "translate(1250,20)")
+       .attr("x", 80)
+	   .attr("y", 115)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "12px")	   
+       .text("10 Cylinder")
+	  SelectedSVG.append("text")
+       .attr("transform", "translate(1250,20)")
+       .attr("x", 80)
+	   .attr("y", 170)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "12px")	   
+       .text("8 Cylinder")
+	  SelectedSVG.append("text")
+       .attr("transform", "translate(1250,20)")
+       .attr("x", 80)
+	   .attr("y", 235)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "12px")	   
+       .text("6 Cylinder")
+	  SelectedSVG.append("text")
+       .attr("transform", "translate(1250,20)")
+       .attr("x", 80)
+	   .attr("y", 290)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "12px")	   
+       .text("4 Cylinder")
+	  SelectedSVG.append("text")
+       .attr("transform", "translate(1250,20)")
+       .attr("x", 80)
+	   .attr("y", 355)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "12px")	   
+       .text("3 Cylinder")
+	SelectedSVG.append("text")
+       .attr("transform", "translate(1250,20)")
+       .attr("x", 80)
+	   .attr("y", 415)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "12px")	   
+       .text("2 Cylinder")
+	 SelectedSVG.append("text")
+       .attr("transform", "translate(1250,20)")
+       .attr("x", 80)
+		.attr("y", 475)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "12px")	   
+       .text("Electric")
+	    	 SelectedSVG.append("text")
+      .attr("transform", "translate(940,20)")
+       .attr("x", 0)
+		.attr("y", 665)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "14px")	   
+       .text("As expected, Electric Vehicles get above average Highway and City MPG")
+	   
+	   SelectedSVG.append("text")
+       .attr("transform", "translate(940,20)")
+       .attr("x", 0)
+		.attr("y", 680)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "14px")	   
+       .text("Click on the buttons at the top to see how the other fuel types and Cylinders Stack up.")
+	  })
+	  
+
+d3.select("#Reset").on('click', function() {
+	simulation
+	  .force("x", d3.forceX(width/2).strength(0.05))
+	  .alphaTarget(0.08)
+	  .restart()
+	SelectedSVG.selectAll("text").remove()
+	SelectedSVG.append("text")
+       .attr("transform", "translate(100,0)")
+       .attr("x", 50)
+       .attr("y", 50)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "20px")	   
+       .text("These are all of the cars produced in 2017")
+	   		 SelectedSVG.append("text")
+       .attr("transform", "translate(1230,0)")
+       .attr("x", 35)
+       .attr("y", 20)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "20px")	   
+       .text("Legend")
+	  SelectedSVG.append("text")
+       .attr("transform", "translate(1250,20)")
+       .attr("x", 80)
+	   .attr("y", 50)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "12px")	   
+       .text("12 Cylinder")
+	  SelectedSVG.append("text")
+       .attr("transform", "translate(1250,20)")
+       .attr("x", 80)
+	   .attr("y", 115)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "12px")	   
+       .text("10 Cylinder")
+	  SelectedSVG.append("text")
+       .attr("transform", "translate(1250,20)")
+       .attr("x", 80)
+	   .attr("y", 170)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "12px")	   
+       .text("8 Cylinder")
+	  SelectedSVG.append("text")
+       .attr("transform", "translate(1250,20)")
+       .attr("x", 80)
+	   .attr("y", 235)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "12px")	   
+       .text("6 Cylinder")
+	  SelectedSVG.append("text")
+       .attr("transform", "translate(1250,20)")
+       .attr("x", 80)
+	   .attr("y", 290)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "12px")	   
+       .text("4 Cylinder")
+	  SelectedSVG.append("text")
+       .attr("transform", "translate(1250,20)")
+       .attr("x", 80)
+	   .attr("y", 355)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "12px")	   
+       .text("3 Cylinder")
+	SelectedSVG.append("text")
+       .attr("transform", "translate(1250,20)")
+       .attr("x", 80)
+	   .attr("y", 415)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "12px")	   
+       .text("2 Cylinder")
+	 SelectedSVG.append("text")
+       .attr("transform", "translate(1250,20)")
+       .attr("x", 80)
+		.attr("y", 475)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "12px")	   
+       .text("Electric")
+	    	 SelectedSVG.append("text")
+     .attr("transform", "translate(940,20)")
+       .attr("x", 0)
+		.attr("y", 665)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "14px")	   
+       .text("As expected, Electric Vehicles get above average Highway and City MPG")
+	   
+	   SelectedSVG.append("text")
+       .attr("transform", "translate(940,20)")
+       .attr("x", 0)
+		.attr("y", 680)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "14px")	   
+       .text("Click on the buttons at the top to see how the other fuel types and Cylinders Stack up.")
+})
+
+
+simulation.nodes(data)
+   .on('tick', ticked)
+
+function ticked() { 
+  circles
+   .attr("cx", function(d) { return d.x })
+   .attr("cy", function(d) { return d.y })
+   }
+	 
+ 
+ 
+  }
+  
+  
+  )
+  .catch(function(error){
+     // handle error  
+  })
+
+
+
+
+
+
+
+</script>
+</body>
+</html>
