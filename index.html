@@ -36,7 +36,10 @@
 		svg{ background: #fff; }
     </style>
     <script src="https://d3js.org/d3.v5.min.js"></script>
-<body><center><font style="font-size: 16px;font-family: Arial, Helvectica, san-serif;">Click To View By:</font>&nbsp;&nbsp;
+<body><center>
+<font style="font-size: 24px;font-family: Arial, Helvectica, san-serif;">2017 Vehicle Fuel Efficiency Comparison</font><br><br>
+
+<font style="font-size: 16px;font-family: Arial, Helvectica, san-serif;">Click To View By:</font>&nbsp;&nbsp;
 <button id="HighwayMPH">Highway MPG</button>
 <button id="CityMPH">City MPG</button>
 <button id="FuelType">Fuel Type</button>
@@ -269,11 +272,11 @@ var forceXFuel = d3.forceX(function(d) {
 	   if(d.Fuel=== "Diesel"){return 100}	 
        if(d.Fuel=== "Electricity"){return 400}	   
 		 }
-		 ).strength(0.09)
+		 ).strength(0.097)
 
-
+//20
 var forceCollide = d3.forceCollide(function(d) {
-          return radiusScale(d.EngineCylinders)+4}) //
+          return radiusScale(d.EngineCylinders)+4}) 
 	 
 var simulation = d3.forceSimulation()
     //.force("x", forceX)
@@ -339,7 +342,7 @@ d3.select("#HighwayMPH").on('click', function() {
        .attr("y", 700)
 	   .attr("font-family", "sans-serif")
        .attr("font-size", "24px")
-       .text("Highway MPG")
+       .text("Current View: Highway MPG")
 	   SelectedSVG.append("text")
        .attr("transform", "translate(0,0)")
        .attr("x", 25)
@@ -454,7 +457,7 @@ d3.select("#CityMPH").on('click', function() {
        .attr("y", 700)
 	   .attr("font-family", "sans-serif")
        .attr("font-size", "24px")
-       .text("City MPG")
+       .text("Current View: City MPG")
 	   SelectedSVG.append("text")
        .attr("transform", "translate(0,0)")
        .attr("x", 50)
@@ -552,7 +555,7 @@ d3.select("#CityMPH").on('click', function() {
 d3.select("#FuelType").on('click', function() {
       simulation
 	  .force("x",forceXFuel)      	  
-	  .alphaTarget(0.12)
+	  .alphaTarget(0.20) //0.12
 	  .restart()	 	  
 	   SelectedSVG.selectAll("text").remove()
 	  SelectedSVG.append("text")
@@ -561,7 +564,7 @@ d3.select("#FuelType").on('click', function() {
        .attr("y", 700)
 	   .attr("font-family", "sans-serif")
        .attr("font-size", "24px")
-       .text("Fuel Type")
+       .text("Current View: Fuel Type")
 	   SelectedSVG.append("text")
        .attr("transform", "translate(0,0)")
        .attr("x", 50)
