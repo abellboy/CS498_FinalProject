@@ -93,6 +93,14 @@ var SelectedSVG = d3.select("#chart")
 	   .attr("font-family", "sans-serif")
        .attr("font-size", "20px")	   
        .text("These are all of the cars produced in 2017")
+	   
+	SelectedSVG.append("text")
+       .attr("transform", "translate(0,0)")
+       .attr("x", 50)
+       .attr("y", 700)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "24px")
+       .text("Current View: Overview")
 	  
 	  
 	  
@@ -327,6 +335,8 @@ var circles = SelectedSVG.selectAll(".cars")
 				 })
         .on("mousemove", function(){return tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");})
         .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
+
+	  
 
 
 
@@ -673,6 +683,13 @@ d3.select("#Reset").on('click', function() {
 	  .alphaTarget(0.08)
 	  .restart()
 	SelectedSVG.selectAll("text").remove()
+	  SelectedSVG.append("text")
+       .attr("transform", "translate(0,0)")
+       .attr("x", 50)
+       .attr("y", 700)
+	   .attr("font-family", "sans-serif")
+       .attr("font-size", "24px")
+       .text("Current View: Overview")
 	SelectedSVG.append("text")
        .attr("transform", "translate(100,0)")
        .attr("x", 50)
