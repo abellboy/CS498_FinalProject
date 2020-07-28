@@ -273,7 +273,7 @@ var forceXFuel = d3.forceX(function(d) {
 
 
 var forceCollide = d3.forceCollide(function(d) {
-          return radiusScale(d.EngineCylinders)}) //+4
+          return radiusScale(d.EngineCylinders)+4}) //
 	 
 var simulation = d3.forceSimulation()
     //.force("x", forceX)
