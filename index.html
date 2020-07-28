@@ -269,7 +269,7 @@ var forceXFuel = d3.forceX(function(d) {
 	   if(d.Fuel=== "Diesel"){return 100}	 
        if(d.Fuel=== "Electricity"){return 400}	   
 		 }
-		 ).strength(0.06)
+		 ).strength(0.09)
 
 
 var forceCollide = d3.forceCollide(function(d) {
@@ -552,7 +552,7 @@ d3.select("#CityMPH").on('click', function() {
 d3.select("#FuelType").on('click', function() {
       simulation
 	  .force("x",forceXFuel)      	  
-	  .alphaTarget(0.26)
+	  .alphaTarget(0.12)
 	  .restart()	 	  
 	   SelectedSVG.selectAll("text").remove()
 	  SelectedSVG.append("text")
